@@ -1,0 +1,7 @@
+{
+    "functions": {
+      "api/get-nfts.ts": {
+        "includeFiles": "data/**"
+      }
+    }
+  }

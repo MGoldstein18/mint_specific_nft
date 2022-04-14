@@ -3,6 +3,7 @@ import fs from 'fs';
 import { ThirdwebSDK } from '@thirdweb-dev/sdk';
 import { ethers } from 'ethers';
 import dotenv from 'dotenv';
+import { join } from 'path';
 
 dotenv.config();
 
@@ -20,7 +21,8 @@ export default async function handler(
   res: NextApiResponse
 ) {
   // Read and format the NFT data
-  const rawData = fs.readFileSync('data/nfts.json');
+  const rawData = fs.readFileSync(join(__dirname, 'data', 'ci.yml'), 'utf8');
+  // const rawData = fs.readFileSync('data/nfts.json');
   console.log(rawData);
   const nfts: NFT[] = JSON.parse(rawData as unknown as string);
   console.log(nfts);
