@@ -20,7 +20,7 @@ export default async function handler(
   res: NextApiResponse
 ) {
   // Read and format the NFT data
-  const rawData = fs.readFileSync('public/data/nfts.json');
+  const rawData = fs.readFileSync('data/nfts.json');
   console.log(rawData);
   const nfts: NFT[] = JSON.parse(rawData as unknown as string);
   console.log(nfts);
@@ -78,7 +78,7 @@ export default async function handler(
         // Update the minted status of the NFT to true so that it can't be minted again
         const newNFTs = nfts;
         newNFTs[id].minted = true;
-        fs.writeFileSync('public/data/nfts.json', JSON.stringify(newNFTs));
+        fs.writeFileSync('data/nfts.json', JSON.stringify(newNFTs));
 
         res.status(201).json({
           payload: response?.payload,
