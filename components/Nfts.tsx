@@ -2,24 +2,29 @@ import { Box, SimpleGrid, Button, Flex, Image } from '@chakra-ui/react';
 import { useEffect, useState } from 'react';
 import { useAddress, useNFTCollection, useMetamask } from '@thirdweb-dev/react';
 
-const Nfts = (props: any) => {
+const Nfts = () => {
   // State to set when we are loading
   const [loading, setLoading] = useState(false);
   // State for nft metadata
   const [nftMetadata, setNftMetadata] = useState([null]);
 
+  const fetchNfts = async () => {
+    try {
+      const response = await fetch('/api/get-nfts', {
+        method: 'GET',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+      });
+      const data = await response.json();
+      setNftMetadata(data);
+    } catch (error) {
+      console.error(error);
+    }
+  };
   // useEffect hook to get NFTs from API
   useEffect(() => {
-    fetch('/api/getNfts', {
-      method: 'GET',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-    })
-      .then((res) => res.json())
-      .then((data) => {
-        setNftMetadata(data);
-      });
+    fetchNfts();
   }, [loading]);
 
   // Use address and connect with metamask
@@ -33,12 +38,12 @@ const Nfts = (props: any) => {
   const nftCollection = useNFTCollection(nftCollectionAddress);
 
   // Function which generates signature and mints NFT
-  async function onClick(id: number) {
+  const mintNft = async (id: number) => {
     try {
       connectWithMetamask();
       setLoading(true);
       // Call API to generate signature and payload for minting
-      const response = await fetch('/api/getNfts', {
+      const response = await fetch('/api/get-nfts', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -103,7 +108,7 @@ const Nfts = (props: any) => {
               <Button
                 colorScheme='purple'
                 m='0.5rem'
-                onClick={() => onClick(nft?.id)}
+                onClick={() => mintNft(nft?.id)}
               >
                 Mint
               </Button>
