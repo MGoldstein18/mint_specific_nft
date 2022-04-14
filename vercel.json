@@ -1,6 +1,6 @@
 {
     "functions": {
-      "api/get-nfts.ts": {
+      "pages/api/get-nfts.ts": {
         "includeFiles": "data/**"
       }
     }
