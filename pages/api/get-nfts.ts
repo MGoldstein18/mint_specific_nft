@@ -21,7 +21,7 @@ export default async function handler(
   res: NextApiResponse
 ) {
   // Read and format the NFT data
-  const rawData = fs.readFileSync(join(__dirname, 'data', 'ci.yml'), 'utf8')
+  const rawData = fs.readFileSync(join(__dirname, 'data', 'nfts.json'), 'utf8')
   // const rawData = fs.readFileSync('data/nfts.json');
   console.log(rawData);
   const nfts: NFT[] = JSON.parse(rawData as unknown as string);
