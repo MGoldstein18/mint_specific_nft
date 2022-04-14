@@ -20,10 +20,10 @@ export default async function handler(
   res: NextApiResponse
 ) {
   // Read and format the NFT data
-  const rawData = fs.readFileSync(
-    'public/data/nfts.json'
-  ) as unknown as string;
-  const nfts: NFT[] = JSON.parse(rawData);
+  const rawData = fs.readFileSync('public/data/nfts.json');
+  console.log(rawData);
+  const nfts: NFT[] = JSON.parse(rawData as unknown as string);
+  console.log(nfts);
 
   switch (req.method) {
     case 'GET':
