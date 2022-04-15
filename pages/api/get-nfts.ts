@@ -1,9 +1,9 @@
 import type { NextApiRequest, NextApiResponse } from 'next';
-import fs from 'fs';
 import { ThirdwebSDK } from '@thirdweb-dev/sdk';
 import { ethers } from 'ethers';
 import dotenv from 'dotenv';
-import { join, resolve } from 'path';
+const path = require('path');
+const { readFileSync, writeFileSync } = require('fs');
 
 dotenv.config();
 
@@ -33,7 +33,7 @@ export default async function handler(
   // const rawData = fs.readFileSync(join(dataDirectory, 'nfts.json'), 'utf8');
 
   // Read and format the NFT data
-   const rawData = fs.readFileSync(join(__dirname, 'data', 'nfts.json'), 'utf8');
+  const rawData = readFileSync(path.join(__dirname + 'data', 'nfts.json'), 'utf8');
   // const rawData = fs.readFileSync('data/nfts.json');
   console.log(rawData);
   const nfts: NFT[] = JSON.parse(rawData as unknown as string);
@@ -94,7 +94,7 @@ export default async function handler(
         // Update the minted status of the NFT to true so that it can't be minted again
         const newNFTs = nfts;
         newNFTs[id].minted = true;
-        fs.writeFileSync('data/nfts.json', JSON.stringify(newNFTs));
+        writeFileSync('data/nfts.json', JSON.stringify(newNFTs));
 
         res.status(201).json({
           payload: response?.payload,
