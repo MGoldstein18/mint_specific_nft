@@ -16,31 +16,30 @@ export interface NFT {
   minted: boolean;
 }
 
-// export async function getServerSideProps(req: NextApiRequest, res: NextApiResponse) {
-//   const { readFileSync } = require("fs");
-//   var path = require("path");
-//   const configDirectory = path.resolve(process.cwd(), "config");
-//   const file = readFileSync(
-//     path.join(configDirectory, "eBayJson.json"),
-//     "utf8"
-//   );
+// export async function getServerSideProps(
+//   req: NextApiRequest,
+//   res: NextApiResponse
+// ) {
+//   const dataDirectory = resolve(process.cwd(), 'data');
+//   const rawData = fs.readFileSync(join(dataDirectory, 'nfts.json'), 'utf8');
+//   return rawData;
 // }
 
 export default async function handler(
   req: NextApiRequest,
   res: NextApiResponse
 ) {
-
-  console.log('directory')
-  const dataDirectory = resolve(process.cwd(), 'data');
-  const rawData = fs.readFileSync(join(dataDirectory, 'nfts.json'), 'utf8');
+  // const dataDirectory = resolve(process.cwd(), 'data');
+  // const rawData = fs.readFileSync(join(dataDirectory, 'nfts.json'), 'utf8');
 
   // Read and format the NFT data
-  // const rawData = fs.readFileSync(join(__dirname, 'data', 'nfts.json'), 'utf8');
+   const rawData = fs.readFileSync(join(__dirname, 'data', 'nfts.json'), 'utf8');
   // const rawData = fs.readFileSync('data/nfts.json');
   console.log(rawData);
   const nfts: NFT[] = JSON.parse(rawData as unknown as string);
   console.log(nfts);
+
+  //const nfts = getServerSideProps(''.,)
 
   switch (req.method) {
     case 'GET':
