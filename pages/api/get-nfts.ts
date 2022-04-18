@@ -16,30 +16,36 @@ export interface NFT {
   minted: boolean;
 }
 
-// export async function getServerSideProps(
-//   req: NextApiRequest,
-//   res: NextApiResponse
-// ) {
-//   const dataDirectory = resolve(process.cwd(), 'data');
-//   const rawData = fs.readFileSync(join(dataDirectory, 'nfts.json'), 'utf8');
-//   return rawData;
-// }
-
 export default async function handler(
   req: NextApiRequest,
   res: NextApiResponse
 ) {
-  // const dataDirectory = resolve(process.cwd(), 'data');
-  // const rawData = fs.readFileSync(join(dataDirectory, 'nfts.json'), 'utf8');
-
-  // Read and format the NFT data
-  const rawData = readFileSync(path.join(__dirname + 'data', 'nfts.json'), 'utf8');
-  // const rawData = fs.readFileSync('data/nfts.json');
-  console.log(rawData);
-  const nfts: NFT[] = JSON.parse(rawData as unknown as string);
-  console.log(nfts);
-
-  //const nfts = getServerSideProps(''.,)
+  let nfts = [
+    {
+      id: 0,
+      name: 'NFT 1',
+      description: 'This is our first amazing NFT',
+      url: 'https://bafybeihgfxd5f5sqili34vyjyfai6kezlagrya43e6bkgw6hnxucxug5ya.ipfs.nftstorage.link/',
+      price: 0.01,
+      minted: false,
+    },
+    {
+      id: 1,
+      name: 'NFT 2',
+      description: 'This is our second amazing NFT',
+      url: 'https://bafybeihgfxd5f5sqili34vyjyfai6kezlagrya43e6bkgw6hnxucxug5ya.ipfs.nftstorage.link/',
+      price: 0.02,
+      minted: false,
+    },
+    {
+      id: 2,
+      name: 'NFT 3',
+      description: 'This is our third amazing NFT',
+      url: 'https://bafybeihgfxd5f5sqili34vyjyfai6kezlagrya43e6bkgw6hnxucxug5ya.ipfs.nftstorage.link/',
+      price: 0.03,
+      minted: false,
+    },
+  ];
 
   switch (req.method) {
     case 'GET':
