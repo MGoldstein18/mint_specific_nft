@@ -1,4 +1,11 @@
-import { Box, SimpleGrid, Button, Flex, Image } from '@chakra-ui/react';
+import {
+  Box,
+  SimpleGrid,
+  Button,
+  Flex,
+  Image,
+  Heading,
+} from '@chakra-ui/react';
 import { useEffect, useState } from 'react';
 import { useAddress, useNFTCollection, useMetamask } from '@thirdweb-dev/react';
 
@@ -7,6 +14,8 @@ const Nfts = () => {
   const [loading, setLoading] = useState(false);
   // State for nft metadata
   const [nftMetadata, setNftMetadata] = useState([null]);
+
+  const [fetchedNfts, setFetchedNfts] = useState(false);
 
   const fetchNfts = async () => {
     try {
@@ -18,6 +27,7 @@ const Nfts = () => {
       });
       const data = await response.json();
       setNftMetadata(data);
+      setFetchedNfts(true);
     } catch (error) {
       console.error(error);
     }
@@ -29,10 +39,9 @@ const Nfts = () => {
 
   // Use address and connect with metamask
   const address = useAddress();
-  const connectWithMetamask = useMetamask();
 
   // You can find your contract address in your dashboard after you have created an NFT Collection contract
-  const nftCollectionAddress = '0xB20B7AA964365A753Fb7412d98D76D139fd7Cbbd';
+  const nftCollectionAddress = '0x121923e1C44585d3e1417B1e3e7cE17be6546e7e';
 
   // Connect to contract using the address
   const nftCollection = useNFTCollection(nftCollectionAddress);
@@ -40,7 +49,6 @@ const Nfts = () => {
   // Function which generates signature and mints NFT
   const mintNft = async (id: number) => {
     try {
-      connectWithMetamask();
       setLoading(true);
       // Call API to generate signature and payload for minting
       const response = await fetch('/api/get-nfts', {
@@ -68,56 +76,60 @@ const Nfts = () => {
       console.log(error);
       alert('Failed to mint NFT!');
     }
-  }
+  };
 
-  return (
-    <SimpleGrid justifyItems='center' columns={3} spacing={10}>
-      {nftMetadata?.map((nft: any) => (
-        <Box
-          key={nftMetadata.indexOf(nft)}
-          maxW='sm'
-          borderWidth='1px'
-          borderRadius='lg'
-          overflow='hidden'
-        >
-          <Image src={nft?.url} alt='NFT image' />
+  if (fetchedNfts) {
+    return (
+      <SimpleGrid m='2rem' justifyItems='center' columns={3} spacing={10}>
+        {nftMetadata?.map((nft: any) => (
+          <Box
+            key={nftMetadata.indexOf(nft)}
+            maxW='sm'
+            borderWidth='1px'
+            borderRadius='lg'
+            overflow='hidden'
+          >
+            <Image src={nft?.url} alt='NFT image' />
 
-          <Flex p='1rem' alignItems='center' flexDir='column'>
-            <Box
-              mt='1'
-              fontWeight='bold'
-              lineHeight='tight'
-              fontSize='20'
-              isTruncated
-              m='0.5rem'
-            >
-              {nft?.name}
-            </Box>
-
-            <Box fontSize='16' m='0.5rem'>
-              {nft?.description}
-            </Box>
-            <Box fontSize='16' m='0.5rem'>
-              {nft?.price}
-            </Box>
-            {loading ? (
-              <p>Minting... You will need to approve 1 transaction</p>
-            ) : nft?.minted ? (
-              <b>This NFT has already been minted</b>
-            ) : (
-              <Button
-                colorScheme='purple'
+            <Flex p='1rem' alignItems='center' flexDir='column'>
+              <Box
+                mt='1'
+                fontWeight='bold'
+                lineHeight='tight'
+                fontSize='20'
+                isTruncated
                 m='0.5rem'
-                onClick={() => mintNft(nft?.id)}
               >
-                Mint
-              </Button>
-            )}
-          </Flex>
-        </Box>
-      ))}
-    </SimpleGrid>
-  );
+                {nft?.name}
+              </Box>
+
+              <Box fontSize='16' m='0.5rem'>
+                {nft?.description}
+              </Box>
+              <Box fontSize='16' m='0.5rem'>
+                {nft?.price}
+              </Box>
+              {loading ? (
+                <p>Minting... You will need to approve 1 transaction</p>
+              ) : nft?.minted ? (
+                <b>This NFT has already been minted</b>
+              ) : (
+                <Button
+                  colorScheme='purple'
+                  m='0.5rem'
+                  onClick={() => mintNft(nft?.id)}
+                >
+                  Mint
+                </Button>
+              )}
+            </Flex>
+          </Box>
+        ))}
+      </SimpleGrid>
+    );
+  } else {
+    return <Heading>Loading...</Heading>;
+  }
 };
 
 export default Nfts;
