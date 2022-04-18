@@ -89,7 +89,7 @@ const Nfts = () => {
             borderRadius='lg'
             overflow='hidden'
           >
-            <Image src={nft?.url} alt='NFT image' />
+            <Image width="30rem" height="15rem" src={nft?.url} alt='NFT image' />
 
             <Flex p='1rem' alignItems='center' flexDir='column'>
               <Box
