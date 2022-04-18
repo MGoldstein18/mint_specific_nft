@@ -39,6 +39,7 @@ const Nfts = () => {
 
   // Use address and connect with metamask
   const address = useAddress();
+  const connectWithMetamask = useMetamask();
 
   // You can find your contract address in your dashboard after you have created an NFT Collection contract
   const nftCollectionAddress = '0x121923e1C44585d3e1417B1e3e7cE17be6546e7e';
@@ -48,8 +49,9 @@ const Nfts = () => {
 
   // Function which generates signature and mints NFT
   const mintNft = async (id: number) => {
+    setLoading(true);
+    connectWithMetamask;
     try {
-      setLoading(true);
       // Call API to generate signature and payload for minting
       const response = await fetch('/api/get-nfts', {
         method: 'POST',
@@ -89,7 +91,12 @@ const Nfts = () => {
             borderRadius='lg'
             overflow='hidden'
           >
-            <Image width="30rem" height="15rem" src={nft?.url} alt='NFT image' />
+            <Image
+              width='30rem'
+              height='15rem'
+              src={nft?.url}
+              alt='NFT image'
+            />
 
             <Flex p='1rem' alignItems='center' flexDir='column'>
               <Box

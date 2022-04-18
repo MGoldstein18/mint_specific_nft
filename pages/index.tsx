@@ -1,4 +1,4 @@
-import { Flex, Heading, SimpleGrid } from '@chakra-ui/react';
+import { Flex, Heading } from '@chakra-ui/react';
 import { useAddress, useMetamask } from '@thirdweb-dev/react';
 import type { NextPage } from 'next';
 import Nfts from '../components/Nfts';
