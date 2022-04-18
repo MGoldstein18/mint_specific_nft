@@ -50,6 +50,7 @@ const Nfts = () => {
   // Function which generates signature and mints NFT
   const mintNft = async (id: number) => {
     setLoading(true);
+    connectWithMetamask;
 
     try {
       // Call API to generate signature and payload for minting
