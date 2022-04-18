@@ -50,7 +50,7 @@ const Nfts = () => {
   // Function which generates signature and mints NFT
   const mintNft = async (id: number) => {
     setLoading(true);
-    connectWithMetamask;
+
     try {
       // Call API to generate signature and payload for minting
       const response = await fetch('/api/get-nfts', {
@@ -61,7 +61,10 @@ const Nfts = () => {
         body: JSON.stringify({ id, address }),
       });
 
+      console.log('generated');
+
       if (response) {
+        connectWithMetamask;
         const data = await response.json();
         const mintInput = {
           signature: data.signature,
