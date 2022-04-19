@@ -116,7 +116,6 @@ export default async function handler(
 
       // Give 3 minutes to mint the NFT
       const startTime = new Date();
-      const endTime = new Date(Date.now() + 300 * 1000);
 
       // Set up the NFT metadata
       const metadata: PayloadToSign721 = {
@@ -128,7 +127,6 @@ export default async function handler(
         },
         price: nfts[id].price,
         mintStartTime: startTime,
-        mintEndTime: endTime,
         to: address,
       };
 
