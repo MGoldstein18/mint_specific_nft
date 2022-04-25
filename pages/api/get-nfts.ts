@@ -2,8 +2,7 @@ import type { NextApiRequest, NextApiResponse } from 'next';
 import {
   ThirdwebSDK,
   PayloadToSign721,
-  NFTMetadata,
-  NFTMetadataOwner,
+  NFTMetadataOwner
 } from '@thirdweb-dev/sdk';
 import { ethers } from 'ethers';
 import dotenv from 'dotenv';
@@ -30,7 +29,7 @@ export default async function handler(
       description: 'This is our first amazing NFT',
       url: 'https://bafybeihgfxd5f5sqili34vyjyfai6kezlagrya43e6bkgw6hnxucxug5ya.ipfs.nftstorage.link/',
       price: 0.01,
-      minted: false,
+      minted: false
     },
     {
       id: 1,
@@ -38,7 +37,7 @@ export default async function handler(
       description: 'This is our second amazing NFT',
       url: 'https://bafybeida2kkclur4345iihiqb6pepfnwse7ko7pvrft4duxwxxwo2jqqjq.ipfs.nftstorage.link/',
       price: 0.02,
-      minted: false,
+      minted: false
     },
     {
       id: 2,
@@ -46,7 +45,7 @@ export default async function handler(
       description: 'This is our third amazing NFT',
       url: 'https://bafybeidegtxcfpr43d6vbrippnm2csxqst7stxaxl3rp5vd27ss6yd3s5e.ipfs.nftstorage.link/',
       price: 0.03,
-      minted: false,
+      minted: false
     },
     {
       id: 3,
@@ -54,7 +53,7 @@ export default async function handler(
       description: 'This is our forth amazing NFT',
       url: 'https://bafybeieicywyvnaher24isrxoagjxbro6qr6kbzcz2feldbquoqeag7ivm.ipfs.nftstorage.link/',
       price: 0.01,
-      minted: false,
+      minted: false
     },
     {
       id: 4,
@@ -62,7 +61,7 @@ export default async function handler(
       description: 'This is our fifth amazing NFT',
       url: 'https://bafybeieufjiaqny6q6kis2ehv2w6epwqzkeoscfc3ltck67dunrbvseczq.ipfs.nftstorage.link/',
       price: 0.02,
-      minted: false,
+      minted: false
     },
     {
       id: 5,
@@ -70,8 +69,8 @@ export default async function handler(
       description: 'This is our sixth amazing NFT',
       url: 'https://bafybeiftcf7xruf4gmlbme6bos5tznlrvz46xfxdnofp3auibvzbizysoy.ipfs.nftstorage.link/',
       price: 0.03,
-      minted: false,
-    },
+      minted: false
+    }
   ];
 
   // Connect to thirdweb SDK
@@ -94,16 +93,21 @@ export default async function handler(
 
   switch (req.method) {
     case 'GET':
-      const mintedNfts: NFTMetadataOwner[] = await nftCollection?.getAll();
-      if (!mintedNfts) {
-        res.status(200).json(nfts);
-      }
-      mintedNfts.forEach((nft) => {
-        if (nft.metadata.attributes) {
-          // @ts-ignore
-          nfts[nft.metadata.attributes.id].minted = true;
+      try {
+        const mintedNfts: NFTMetadataOwner[] = await nftCollection?.getAll();
+        console.log(mintedNfts);
+        if (!mintedNfts) {
+          res.status(200).json(nfts);
         }
-      });
+        mintedNfts.forEach((nft) => {
+          if (nft.metadata.attributes) {
+            // @ts-ignore
+            nfts[nft.metadata.attributes.id].minted = true;
+          }
+        });
+      } catch (error) {
+        console.error(error);
+      }
       res.status(200).json(nfts);
       break;
     case 'POST':
@@ -123,11 +127,11 @@ export default async function handler(
           name: nfts[id].name,
           description: nfts[id].description,
           image: nfts[id].url,
-          attributes: { id },
+          attributes: { id }
         },
         price: nfts[id].price,
         mintStartTime: startTime,
-        to: address,
+        to: address
       };
 
       try {
@@ -135,7 +139,7 @@ export default async function handler(
 
         res.status(201).json({
           payload: response?.payload,
-          signature: response?.signature,
+          signature: response?.signature
         });
       } catch (error) {
         res.status(500).json({ error });
