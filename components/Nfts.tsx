@@ -62,8 +62,6 @@ const Nfts = () => {
         body: JSON.stringify({ id, address }),
       });
 
-      console.log('generated');
-
       if (response) {
         connectWithMetamask;
         const data = await response.json();

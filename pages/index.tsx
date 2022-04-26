@@ -2,6 +2,7 @@ import { Flex, Heading } from '@chakra-ui/react';
 import { useAddress, useMetamask } from '@thirdweb-dev/react';
 import type { NextPage } from 'next';
 import Nfts from '../components/Nfts';
+import { Button } from '@chakra-ui/react';
 
 const Home: NextPage = () => {
   // Use address and connect with metamask
@@ -16,7 +17,9 @@ const Home: NextPage = () => {
           <Nfts />
         </Flex>
       ) : (
-        <button onClick={connectWithMetamask}>Connect Metamask Wallet</button>
+        <Flex mt='5rem' alignItems='center' flexDir='column'>
+          <Button size='lg' colorScheme='pink' onClick={connectWithMetamask}>Connect Metamask Wallet</Button>
+        </Flex>
       )}
     </div>
   );

@@ -95,7 +95,6 @@ export default async function handler(
     case 'GET':
       try {
         const mintedNfts: NFTMetadataOwner[] = await nftCollection?.getAll();
-        console.log(mintedNfts);
         if (!mintedNfts) {
           res.status(200).json(nfts);
         }
