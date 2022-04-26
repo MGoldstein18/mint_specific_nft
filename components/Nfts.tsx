@@ -4,10 +4,16 @@ import {
   Button,
   Flex,
   Image,
-  Heading,
+  Heading
 } from '@chakra-ui/react';
 import { useEffect, useState } from 'react';
-import { useAddress, useNFTCollection, useMetamask } from '@thirdweb-dev/react';
+import {
+  useAddress,
+  useNFTCollection,
+  useMetamask,
+  useChainId,
+  ChainId
+} from '@thirdweb-dev/react';
 
 const Nfts = () => {
   // State to set when we are loading
@@ -22,8 +28,8 @@ const Nfts = () => {
       const response = await fetch('/api/get-nfts', {
         method: 'GET',
         headers: {
-          'Content-Type': 'application/json',
-        },
+          'Content-Type': 'application/json'
+        }
       });
       const data = await response.json();
       setNftMetadata(data);
@@ -40,6 +46,7 @@ const Nfts = () => {
   // Use address and connect with metamask
   const address = useAddress();
   const connectWithMetamask = useMetamask();
+  const chainId = useChainId();
 
   // You can find your contract address in your dashboard after you have created an NFT Collection contract
   const nftCollectionAddress = '0x121923e1C44585d3e1417B1e3e7cE17be6546e7e';
@@ -57,9 +64,9 @@ const Nfts = () => {
       const response = await fetch('/api/get-nfts', {
         method: 'POST',
         headers: {
-          'Content-Type': 'application/json',
+          'Content-Type': 'application/json'
         },
-        body: JSON.stringify({ id, address }),
+        body: JSON.stringify({ id, address })
       });
 
       if (response) {
@@ -67,7 +74,7 @@ const Nfts = () => {
         const data = await response.json();
         const mintInput = {
           signature: data.signature,
-          payload: data.payload,
+          payload: data.payload
         };
 
         await nftCollection?.signature.mint(mintInput);
@@ -81,6 +88,14 @@ const Nfts = () => {
       alert('Failed to mint NFT!');
     }
   };
+
+  if (chainId !== ChainId.Rinkeby) {
+    return (
+      <Flex mt='5rem' alignItems='center' flexDir='column'>
+        <Heading fontSize='md'>Please connect to the Rinkeby Testnet</Heading>
+      </Flex>
+    );
+  }
 
   if (fetchedNfts) {
     return (
