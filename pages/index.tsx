@@ -1,8 +1,7 @@
-import { Flex, Heading } from '@chakra-ui/react';
+import { Flex, Heading, Button } from '@chakra-ui/react';
 import { useAddress, useMetamask } from '@thirdweb-dev/react';
 import type { NextPage } from 'next';
 import Nfts from '../components/Nfts';
-import { Button } from '@chakra-ui/react';
 
 const Home: NextPage = () => {
   // Use address and connect with metamask

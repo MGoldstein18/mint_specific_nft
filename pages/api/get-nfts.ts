@@ -5,18 +5,11 @@ import {
   NFTMetadataOwner
 } from '@thirdweb-dev/sdk';
 import { ethers } from 'ethers';
+// We use dotenv to securely manage our private key.
+// If you deploy this project to Vercel, use their environment variable management instead
 import dotenv from 'dotenv';
 
 dotenv.config();
-
-export interface NFT {
-  id: number;
-  name: string;
-  description: string;
-  url: string;
-  price: number;
-  minted: boolean;
-}
 
 export default async function handler(
   req: NextApiRequest,
@@ -24,12 +17,12 @@ export default async function handler(
 ) {
   let nfts = [
     {
-      id: 0,
-      name: 'NFT 1',
-      description: 'This is our first amazing NFT',
-      url: 'https://bafybeihgfxd5f5sqili34vyjyfai6kezlagrya43e6bkgw6hnxucxug5ya.ipfs.nftstorage.link/',
-      price: 0.01,
-      minted: false
+      id: 0, // Unique ID for each NFT corresponding to its position in the array
+      name: 'NFT 1', // A name for the NFT
+      description: 'This is our first amazing NFT', // Description for the NFT
+      url: 'https://bafybeihgfxd5f5sqili34vyjyfai6kezlagrya43e6bkgw6hnxucxug5ya.ipfs.nftstorage.link/', // URL for the NFT image
+      price: 0.01, // The price of the NFT
+      minted: false // A variable to indicate if the NFT has been minted
     },
     {
       id: 1,
@@ -94,14 +87,20 @@ export default async function handler(
   switch (req.method) {
     case 'GET':
       try {
+        // Get all the NFTs that have been minted from the contract
         const mintedNfts: NFTMetadataOwner[] = await nftCollection?.getAll();
+        // If no NFTs have been minted, return the array of NFT metadata
         if (!mintedNfts) {
           res.status(200).json(nfts);
         }
+        // If there are NFTs that have been minted, go through each of them
         mintedNfts.forEach((nft) => {
           if (nft.metadata.attributes) {
-            // @ts-ignore
-            nfts[nft.metadata.attributes.id].minted = true;
+            // Find the id attribute of the NFT
+            // @ts-expect-error
+            const positionInMetadataArray = nft.metadata.attributes.id;
+            // Change the minted status of the NFT metadata at the position of ID in the NFT metadata array
+            nfts[positionInMetadataArray].minted = true;
           }
         });
       } catch (error) {
@@ -110,25 +109,30 @@ export default async function handler(
       res.status(200).json(nfts);
       break;
     case 'POST':
-      // Get ID and address from request body and ensure that the requested NFT has not yet been minted
+      // Get ID of the NFT to mint and address of the user from request body
       const { id, address } = req.body;
 
+      // Ensure that the requested NFT has not yet been minted
       if (nfts[id].minted === true) {
         res.status(400).json({ message: 'Invalid request' });
       }
 
-      // Give 3 minutes to mint the NFT
+      // Allow the minting to happen anytime from now
       const startTime = new Date(0);
 
-      // Set up the NFT metadata
+      // Find the NFT to mint in the array of NFT metadata using the ID
+      const nftToMint = nfts[id]
+
+      // Set up the NFT metadata for signature generation
       const metadata: PayloadToSign721 = {
         metadata: {
-          name: nfts[id].name,
-          description: nfts[id].description,
-          image: nfts[id].url,
+          name: nftToMint.name,
+          description: nftToMint.description,
+          image: nftToMint.url,
+          // Set the id attribute which we use to find which NFTs have been minted
           attributes: { id }
         },
-        price: nfts[id].price,
+        price: nftToMint.price,
         mintStartTime: startTime,
         to: address
       };
@@ -136,6 +140,7 @@ export default async function handler(
       try {
         const response = await nftCollection?.signature.generate(metadata);
 
+        // Respond with the payload and signature which will be used in the frontend to mint the NFT
         res.status(201).json({
           payload: response?.payload,
           signature: response?.signature

@@ -20,9 +20,10 @@ const Nfts = () => {
   const [loading, setLoading] = useState(false);
   // State for nft metadata
   const [nftMetadata, setNftMetadata] = useState([null]);
-
+  // State to track if the NFTs have been fetched
   const [fetchedNfts, setFetchedNfts] = useState(false);
 
+  // Function to fetch NFTs from the backend
   const fetchNfts = async () => {
     try {
       const response = await fetch('/api/get-nfts', {
@@ -32,7 +33,9 @@ const Nfts = () => {
         }
       });
       const data = await response.json();
+      // Save NFTs to the state variable
       setNftMetadata(data);
+      // Record that the NFTs have been fetched
       setFetchedNfts(true);
     } catch (error) {
       console.error(error);
@@ -42,11 +45,6 @@ const Nfts = () => {
   useEffect(() => {
     fetchNfts();
   }, [loading]);
-
-  // Use address and connect with metamask
-  const address = useAddress();
-  const connectWithMetamask = useMetamask();
-  const chainId = useChainId();
 
   // You can find your contract address in your dashboard after you have created an NFT Collection contract
   const nftCollectionAddress = '0x121923e1C44585d3e1417B1e3e7cE17be6546e7e';
@@ -88,7 +86,14 @@ const Nfts = () => {
       alert('Failed to mint NFT!');
     }
   };
+  // Use address and connect with metamask
+  const address = useAddress();
+  const connectWithMetamask = useMetamask();
 
+  // Get the id of the chain that the user is connected to
+  const chainId = useChainId();
+
+  // Require that the user is connected to Rinkeby
   if (chainId !== ChainId.Rinkeby) {
     return (
       <Flex mt='5rem' alignItems='center' flexDir='column'>
